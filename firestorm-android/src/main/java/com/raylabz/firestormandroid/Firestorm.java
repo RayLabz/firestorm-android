@@ -125,6 +125,14 @@ public final class Firestorm {
                     if (task.isSuccessful()) {
                         source.setResult(reference.getId());
                     }
+                    else {
+                        if (task.getException() != null) {
+                            source.setException(task.getException());
+                        }
+                        else {
+                            source.setException(new FirestormObjectException("Could not write object with ID '" + reference.getId() + "'."));
+                        }
+                    }
                 });
             });
             return source.getTask();
@@ -153,6 +161,14 @@ public final class Firestorm {
                     if (task.isSuccessful()) {
                         source.setResult(reference.getId());
                     }
+                    else {
+                        if (task.getException() != null) {
+                            source.setException(task.getException());
+                        }
+                        else {
+                            source.setException(new FirestormObjectException("Could not write object with ID '" + id + "'."));
+                        }
+                    }
                 });
             });
             return source.getTask();
@@ -177,7 +193,12 @@ public final class Firestorm {
             docRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     T object = task.getResult().toObject(objectClass);
-                    source.setResult(object);
+                    if (object == null) {
+                        source.setException(new FirestormObjectException("Object with ID '" + documentID + "' not found."));
+                    }
+                    else {
+                        source.setResult(object);
+                    }
                 }
             });
         });
@@ -220,79 +241,36 @@ public final class Firestorm {
         ArrayList<String> idsList = new ArrayList<>(Arrays.asList(ids));
         return getMany(objectClass, idsList);
     }
-//
-//    /**
-//     * Retrieves multiple documents of a class as a list of objects.
-//     * @param objectClass The class of the objects.
-//     * @param ids A list of IDs of the objects to retrieve.
-//     * @param <T> A type matching the type of object class.
-//     * @param onFailureListener FailureListener to execute onFailure().
-//     * @return Returns a list of type T.
-//     */
-//    public static <T> List<T> getMany(final Class<T> objectClass, List<String> ids, OnFailureListener onFailureListener) {
-//        ArrayList<T> retItems = new ArrayList<>();
-//        final DocumentReference[] documentReferences = new DocumentReference[ids.size()];
-//        for (int i = 0; i < documentReferences.length; i++) {
-//            documentReferences[i] = (firestore.collection(objectClass.getSimpleName()).document(ids.get(i)));
-//        }
-//        final ApiFuture<List<DocumentSnapshot>> items = firestore.getAll(documentReferences);
-//        try {
-//            final List<DocumentSnapshot> documentSnapshots = items.get();
-//            for (DocumentSnapshot documentSnapshot : documentSnapshots) {
-//                if (documentSnapshot.exists()) {
-//                    retItems.add(documentSnapshot.toObject(objectClass));
-//                }
-//            }
-//            return retItems;
-//        } catch (ExecutionException | InterruptedException e) {
-//            onFailureListener.onFailure(e);
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Retrieves a document as an object from Firestore.
-//     *
-//     * @param objectClass The class of the object retrieved.
-//     * @param documentID  The documentID of the object to retrieve.
-//     * @param <T>         A type matching the type of objectClass.
-//     * @return Returns an object of type T (objectClass).
-//     * @throws FirestormException Thrown when Firestorm encounters an error.
-//     */
-//    public static <T> T get(final Class<T> objectClass, final String documentID) throws FirestormException {
-//        DocumentReference docRef = firestore.collection(objectClass.getSimpleName()).document(documentID);
-//        ApiFuture<DocumentSnapshot> future = docRef.get();
-//        try {
-//            DocumentSnapshot document = future.get();
-//            if (document.exists()) {
-//                return document.toObject(objectClass);
-//            }
-//            else {
-//                return null;
-//            }
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            throw new FirestormException(e);
-//        }
-//    }
-//
-//    /**
-//     * Checks if a given documentID of a given class exists.
-//     *
-//     * @param objectClass The object class.
-//     * @param documentID The document ID.
-//     * @return Returns true if the document exists on Firestore, false otherwise.
-//     * @throws FirestormException Thrown when Firestorm encounters an error.
-//     */
-//    public static boolean exists(final Class<?> objectClass, final String documentID) throws FirestormException {
-//        DocumentReference docRef = firestore.collection(objectClass.getSimpleName()).document(documentID);
-//        ApiFuture<DocumentSnapshot> future = docRef.get();
-//        try {
-//            DocumentSnapshot document = future.get();
-//            return document.exists();
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            throw new FirestormException(e);
-//        }
-//    }
+
+    /**
+     * Checks if a given documentID of a given class exists.
+     *
+     * @param objectClass The object class.
+     * @param documentID The document ID.
+     * @return Returns true if the document exists on Firestore, false otherwise.
+     * @throws FirestormException Thrown when Firestorm encounters an error.
+     */
+    public static Task<Boolean> exists(final Class<?> objectClass, final String documentID) throws FirestormException {
+        DocumentReference docRef = firestore.collection(objectClass.getSimpleName()).document(documentID);
+        TaskCompletionSource<Boolean> source = new TaskCompletionSource<>();
+        new Handler().post(() -> {
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    boolean exists = task.getResult().exists();
+                    source.setResult(exists);
+                }
+                else {
+                    if (task.getException() != null) {
+                        source.setException(task.getException());
+                    }
+                    else {
+                        source.setException(new FirestormObjectException("Could not check object with ID '" + documentID + "'."));
+                    }
+                }
+            });
+        });
+        return source.getTask();
+    }
 //
 //    /**
 //     * Checks if a given documentID of a given class exists.
