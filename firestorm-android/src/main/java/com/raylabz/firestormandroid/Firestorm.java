@@ -107,6 +107,14 @@ public final class Firestorm {
     }
 
     /**
+     * Retrieves the Firestore instance.
+     * @return Returns FirebaseFirestore.
+     */
+    public static FirebaseFirestore getFirestore() {
+        return firestore;
+    }
+
+    /**
      * Creates a Firestore document from an object.
      *
      * @param object An object containing the data to be written in Firestore.
