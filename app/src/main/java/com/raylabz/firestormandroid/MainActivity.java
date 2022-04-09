@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Button deleteButton;
     Button getManyButton;
     Button existsButton;
+    Button updateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         deleteButton = findViewById(R.id.buttonDelete);
         getManyButton = findViewById(R.id.buttonGetMany);
         existsButton = findViewById(R.id.buttonExists);
+        updateButton = findViewById(R.id.buttonUpdate);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +90,26 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Boolean aBoolean) {
                                 Toast.makeText(MainActivity.this, aBoolean.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
+
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Person personUpdate = new Person("aaa", "Panayiota", 27);
+                Firestorm.update(personUpdate)
+                        .addOnSuccessListener(new OnSuccessListener<String>() {
+                            @Override
+                            public void onSuccess(String s) {
+                                Toast.makeText(MainActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(MainActivity.this, "Failed to update", Toast.LENGTH_SHORT).show();
                             }
                         });
             }

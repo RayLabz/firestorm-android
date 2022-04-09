@@ -271,61 +271,39 @@ public final class Firestorm {
         });
         return source.getTask();
     }
-//
-//    /**
-//     * Checks if a given documentID of a given class exists.
-//     *
-//     * @param objectClass The object class.
-//     * @param documentID The document ID.
-//     * @param onFailureListener A failure listener.
-//     * @return Returns true if the document exists on Firestore, false otherwise.
-//     */
-//    public static boolean exists(final Class<?> objectClass, final String documentID, final OnFailureListener onFailureListener) {
-//        DocumentReference docRef = firestore.collection(objectClass.getSimpleName()).document(documentID);
-//        ApiFuture<DocumentSnapshot> future = docRef.get();
-//        try {
-//            DocumentSnapshot document = future.get();
-//            return document.exists();
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            onFailureListener.onFailure(e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * Updates a document in Firestore.
-//     *
-//     * @param object An object which provides data and the document ID for the update.
-//     * @param onFailureListener FailureListener to execute onFailure().
-//     */
-//    public static void update(final Object object, final OnFailureListener onFailureListener) {
-//        try {
-//            checkRegistration(object);
-//            final String documentID = Reflector.getIDField(object);
-//            final DocumentReference reference = firestore.collection(object.getClass().getSimpleName()).document(documentID);
-//            reference.set(object).get();
-//        } catch (InterruptedException | ExecutionException | ClassRegistrationException | IllegalAccessException | NoSuchFieldException | NotInitializedException e) {
-//            onFailureListener.onFailure(e);
-//        }
-//    }
-//
-//    /**
-//     * Updates a document in Firestore.
-//     *
-//     * @param object An object which provides data and the document ID for the update.
-//     * @throws FirestormException Thrown when Firestorm encounters an error.
-//     */
-//    public static void update(final Object object) throws FirestormException {
-//        try {
-//            checkRegistration(object);
-//            final String documentID = Reflector.getIDField(object);
-//            final DocumentReference reference = firestore.collection(object.getClass().getSimpleName()).document(documentID);
-//            reference.set(object).get();
-//        } catch (InterruptedException | ExecutionException | ClassRegistrationException | IllegalAccessException | NoSuchFieldException | NotInitializedException e) {
-//            throw new FirestormException(e);
-//        }
-//    }
-//
+
+    /**
+     * Updates a document in Firestore.
+     *
+     * @param object An object which provides data and the document ID for the update.
+     * @throws FirestormException Thrown when Firestorm encounters an error.
+     */
+    public static Task<String> update(final Object object) throws FirestormException {
+        try {
+            checkRegistration(object);
+            final String documentID = Reflector.getIDField(object);
+            final DocumentReference reference = firestore.collection(object.getClass().getSimpleName()).document(documentID);
+            TaskCompletionSource<String> source = new TaskCompletionSource<>();
+            new Handler().post(() -> {
+                reference.set(object).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        source.setResult(reference.getId());
+                    }
+                    else {
+                        if (task.getException() != null) {
+                            source.setException(task.getException());
+                        }
+                        else {
+                            source.setException(new FirestormObjectException("Could not update object with ID '" + reference.getId() + "'."));
+                        }
+                    }
+                });
+            });
+            return source.getTask();
+        } catch (ClassRegistrationException | NoSuchFieldException | IllegalAccessException | NotInitializedException e) {
+            throw new FirestormException(e);
+        }
+    }
 
     /**
      * Deletes an object from Firestore.
@@ -347,62 +325,7 @@ public final class Firestorm {
             throw new FirestormException(e);
         }
     }
-//
-//    /**
-//     * Deletes an object from Firestore.
-//     *
-//     * @param objectClass The class of the object to delete.
-//     * @param objectID The ID of the object/document in Firestore.
-//     * @param <T> The type (class) of the object.
-//     * @param onFailureListener OnFailureListener to execute onFailure().
-//     * @throws NotInitializedException Thrown when the reference to an object cannot be initialized.
-//     */
-//    public static <T> void delete(final Class<T> objectClass, final String objectID, final OnFailureListener onFailureListener) {
-//        final DocumentReference reference = firestore.collection(objectClass.getSimpleName()).document(objectID);
-//        try {
-//            reference.delete().get();
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            onFailureListener.onFailure(e);
-//        }
-//    }
-//
-//    /**
-//     * Deletes an object from Firestore.
-//     *
-//     * @param object The object to delete.
-//     * @param <T> The type (class) of the object.
-//     * @throws FirestormException Thrown when Firestorm encounters an error.
-//     */
-//    public static <T> void delete(final Object object) throws FirestormException {
-//        try {
-//            checkRegistration(object);
-//            final String documentID = Reflector.getIDField(object);
-//            final DocumentReference reference = firestore.collection(object.getClass().getSimpleName()).document(documentID);
-//            reference.delete().get();
-//            Reflector.setIDField(object, null);
-//        } catch (InterruptedException | ExecutionException | IllegalAccessException | NoSuchFieldException | ClassRegistrationException | NotInitializedException e) {
-//            throw new FirestormException(e);
-//        }
-//    }
-//
-//    /**
-//     * Deletes an object from Firestore.
-//     *
-//     * @param object The object to delete.
-//     * @param onFailureListener OnFailureListener to execute onFailure().
-//     * @param <T> The type (class) of the object.
-//     */
-//    public static <T> void delete(final Object object, final OnFailureListener onFailureListener) {
-//        try {
-//            checkRegistration(object);
-//            final String documentID = Reflector.getIDField(object);
-//            final DocumentReference reference = firestore.collection(object.getClass().getSimpleName()).document(documentID);
-//            reference.delete().get();
-//            Reflector.setIDField(object, null);
-//        } catch (InterruptedException | ExecutionException | IllegalAccessException | NoSuchFieldException | ClassRegistrationException | NotInitializedException e) {
-//            onFailureListener.onFailure(e);
-//        }
-//    }
+
 //
 //    /**
 //     * Lists available documents of a given type.
