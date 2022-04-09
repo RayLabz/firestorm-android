@@ -11,6 +11,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
         resultTextview = findViewById(R.id.resultTextview);
 
+        final Person p = new Person("aaa", "Nicos", 29);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Person p = new Person("aaa", "Nicos", 29);
                 Firestorm.create(p, p.getId());
                 resultTextview.setText(p.getId());
             }
@@ -206,6 +210,43 @@ public class MainActivity extends AppCompatActivity {
 
         //Register classes:
         Firestorm.register(Person.class);
+
+
+        //Test object reference with ID
+        {
+            DocumentReference aaa = Firestorm.getObjectReference(Person.class, "aaa");
+            aaa.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    System.out.println(documentSnapshot.toObject(Person.class));
+                }
+            });
+        }
+
+
+        //Test object reference with POJO:
+        {
+            DocumentReference aaa1 = Firestorm.getObjectReference(p);
+            aaa1.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    System.out.println(documentSnapshot.toObject(Person.class));
+                }
+            });
+        }
+
+        //Test collection reference:
+        {
+            CollectionReference c1 = Firestorm.getCollectionReference(Person.class);
+            c1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<Person> people = queryDocumentSnapshots.toObjects(Person.class);
+                    System.out.println(people);
+                }
+            });
+        }
+
 
 
     }

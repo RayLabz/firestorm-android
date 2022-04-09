@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 //import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -19,8 +20,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
-
-//TODO - Note: Field paths are not currently supported, perhaps in a future release...
 
 /**
  * An object that enables quick use of Firestore filters without using additional DocumentReferences.
@@ -64,17 +63,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by value by field path (equality).
-//     * @param fieldPath The field path.
-//     * @param value The value.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereEqualTo(@Nonnull FieldPath fieldPath, @Nullable Object value) {
-//        query = query.whereEqualTo(fieldPath, value);
-//        return this;
-//    }
+    /**
+     * Filters by value by field path (equality).
+     * @param fieldPath The field path.
+     * @param value The value.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereEqualTo(@Nonnull FieldPath fieldPath, @Nullable Object value) {
+        query = query.whereEqualTo(fieldPath, value);
+        return this;
+    }
 
     /**
      * Filters by value (less than).
@@ -112,17 +111,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by value (less than or equal to).
-//     * @param fieldPath The field path.
-//     * @param value The value.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereLessThanOrEqualTo(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
-//        query = query.whereLessThanOrEqualTo(fieldPath, value);
-//        return this;
-//    }
+    /**
+     * Filters by value (less than or equal to).
+     * @param fieldPath The field path.
+     * @param value The value.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereLessThanOrEqualTo(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
+        query = query.whereLessThanOrEqualTo(fieldPath, value);
+        return this;
+    }
 
     /**
      * Filters by value (greater than).
@@ -136,17 +135,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by value (greater than).
-//     * @param fieldPath The field path.
-//     * @param value The value.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereGreaterThan(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
-//        query = query.whereGreaterThan(fieldPath, value);
-//        return this;
-//    }
+    /**
+     * Filters by value (greater than).
+     * @param fieldPath The field path.
+     * @param value The value.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereGreaterThan(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
+        query = query.whereGreaterThan(fieldPath, value);
+        return this;
+    }
 
     /**
      * Filters by value (greater than or equal to).
@@ -160,17 +159,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by value (greater than or equal to).
-//     * @param fieldPath The field path.
-//     * @param value The value.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereGreaterThanOrEqualTo(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
-//        query = query.whereGreaterThanOrEqualTo(fieldPath, value);
-//        return this;
-//    }
+    /**
+     * Filters by value (greater than or equal to).
+     * @param fieldPath The field path.
+     * @param value The value.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereGreaterThanOrEqualTo(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
+        query = query.whereGreaterThanOrEqualTo(fieldPath, value);
+        return this;
+    }
 
     /**
      * Filters by array field containing a value.
@@ -184,17 +183,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by array field containing a value.
-//     * @param fieldPath The field path.
-//     * @param value The value.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereArrayContains(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
-//        query = query.whereArrayContains(fieldPath, value);
-//        return this;
-//    }
+    /**
+     * Filters by array field containing a value.
+     * @param fieldPath The field path.
+     * @param value The value.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereArrayContains(@Nonnull FieldPath fieldPath, @Nonnull Object value) {
+        query = query.whereArrayContains(fieldPath, value);
+        return this;
+    }
 
     /**
      * Filters by field containing any of a list of values.
@@ -208,17 +207,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by field containing any of a list of values.
-//     * @param fieldPath The field path.
-//     * @param values The list of values.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereArrayContainsAny(@Nonnull FieldPath fieldPath, @Nonnull List<?> values) {
-//        query = query.whereArrayContainsAny(fieldPath, values);
-//        return this;
-//    }
+    /**
+     * Filters by field containing any of a list of values.
+     * @param fieldPath The field path.
+     * @param values The list of values.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereArrayContainsAny(@Nonnull FieldPath fieldPath, @Nonnull List<?> values) {
+        query = query.whereArrayContainsAny(fieldPath, values);
+        return this;
+    }
 
     /**
      * Filters by an <u>array</u> field containing a list of values.
@@ -232,17 +231,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by an <u>array</u> field containing a list of values.
-//     * @param fieldPath The field path.
-//     * @param values The list of values.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereIn(@Nonnull FieldPath fieldPath, @Nonnull List<?> values) {
-//        query = query.whereIn(fieldPath, values);
-//        return this;
-//    }
+    /**
+     * Filters by an <u>array</u> field containing a list of values.
+     * @param fieldPath The field path.
+     * @param values The list of values.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereIn(@Nonnull FieldPath fieldPath, @Nonnull List<?> values) {
+        query = query.whereIn(fieldPath, values);
+        return this;
+    }
 
     /**
      * Filters by an <u>array</u> field NOT containing a list of values.
@@ -256,17 +255,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Filters by an <u>array</u> field NOT containing a list of values.
-//     * @param fieldPath The field path.
-//     * @param values The list of values.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> whereNotIn(@Nonnull FieldPath fieldPath, @Nonnull List<?> values) {
-//        query = query.whereNotIn(fieldPath, values);
-//        return this;
-//    }
+    /**
+     * Filters by an <u>array</u> field NOT containing a list of values.
+     * @param fieldPath The field path.
+     * @param values The list of values.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> whereNotIn(@Nonnull FieldPath fieldPath, @Nonnull List<?> values) {
+        query = query.whereNotIn(fieldPath, values);
+        return this;
+    }
 
     /**
      * Orders results by a field.
@@ -279,16 +278,16 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Orders results by a field.
-//     * @param fieldPath The field path.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> orderBy(@Nonnull FieldPath fieldPath) {
-//        query = query.orderBy(fieldPath);
-//        return this;
-//    }
+    /**
+     * Orders results by a field.
+     * @param fieldPath The field path.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> orderBy(@Nonnull FieldPath fieldPath) {
+        query = query.orderBy(fieldPath);
+        return this;
+    }
 
     /**
      * Orders results by a field in a specified direction.
@@ -302,17 +301,17 @@ public class FirestormFilterable<T> {
         return this;
     }
 
-//    /**
-//     * Orders results by a field in a specified direction.
-//     * @param fieldPath The field path.
-//     * @param direction The direction (ascending/descending) of ordering.
-//     * @return Returns a filterable.
-//     */
-//    @Nonnull
-//    public FirestormFilterable<T> orderBy(@Nonnull FieldPath fieldPath, @Nonnull Query.Direction direction) {
-//        query = query.orderBy(fieldPath, direction);
-//        return this;
-//    }
+    /**
+     * Orders results by a field in a specified direction.
+     * @param fieldPath The field path.
+     * @param direction The direction (ascending/descending) of ordering.
+     * @return Returns a filterable.
+     */
+    @Nonnull
+    public FirestormFilterable<T> orderBy(@Nonnull FieldPath fieldPath, @Nonnull Query.Direction direction) {
+        query = query.orderBy(fieldPath, direction);
+        return this;
+    }
 
     /**
      * Limits the number of results.
@@ -325,6 +324,7 @@ public class FirestormFilterable<T> {
         return this;
     }
 
+    //TODO - Offset is currently disabled...
 //    /**
 //     * Offsets the results by a certain index.
 //     * @param offset The offset.

@@ -4,20 +4,12 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.raylabz.firestormandroid.exception.ClassRegistrationException;
 import com.raylabz.firestormandroid.exception.FirestormException;
 import com.raylabz.firestormandroid.exception.FirestormObjectException;
@@ -413,47 +405,47 @@ public final class Firestorm {
     public static <T> FirestormFilterable<T> filter(final Class<T> objectClass) {
         return new FirestormFilterable<>(firestore.collection(objectClass.getSimpleName()), objectClass);
     }
-//
-//    /**
-//     * Retrieves a DocumentReference to an object.
-//     *
-//     * @param objectClass The type of the object.
-//     * @param documentID The object's ID.
-//     * @param <T> The type of the object.
-//     * @return Returns DocumentReference.
-//     */
-//    public static <T> DocumentReference getObjectReference(final Class<T> objectClass, final String documentID) {
-//        return firestore.collection(objectClass.getSimpleName()).document(documentID);
-//    }
-//
-//    /**
-//     * Retrieves a DocumentReference to an object.
-//     *
-//     * @param object The object to get the reference for.
-//     * @param <T> The type of the object.
-//     * @return Returns DocumentReference.
-//     * @throws FirestormException Thrown when Firestorm encounters an error.
-//     */
-//    public static <T> DocumentReference getObjectReference(Object object) throws FirestormException {
-//        try {
-//            checkRegistration(object);
-//            final String documentID = Reflector.getIDField(object);
-//            return firestore.collection(object.getClass().getSimpleName()).document(documentID);
-//        } catch (IllegalAccessException | NoSuchFieldException | ClassRegistrationException | NotInitializedException e) {
-//            throw new FirestormException(e);
-//        }
-//    }
-//
-//    /**
-//     * Retrieves a CollectionReference to a type.
-//     *
-//     * @param objectClass The class of object to get a reference for.
-//     * @param <T> The Type of class.
-//     * @return Returns a CollectionReference.
-//     */
-//    public static <T> CollectionReference getCollectionReference(final Class<T> objectClass) {
-//        return firestore.collection(objectClass.getSimpleName());
-//    }
+
+    /**
+     * Retrieves a DocumentReference to an object.
+     *
+     * @param objectClass The type of the object.
+     * @param documentID The object's ID.
+     * @param <T> The type of the object.
+     * @return Returns DocumentReference.
+     */
+    public static <T> DocumentReference getObjectReference(final Class<T> objectClass, final String documentID) {
+        return firestore.collection(objectClass.getSimpleName()).document(documentID);
+    }
+
+    /**
+     * Retrieves a DocumentReference to an object.
+     *
+     * @param object The object to get the reference for.
+     * @param <T> The type of the object.
+     * @return Returns DocumentReference.
+     * @throws FirestormException Thrown when Firestorm encounters an error.
+     */
+    public static <T> DocumentReference getObjectReference(Object object) throws FirestormException {
+        try {
+            checkRegistration(object);
+            final String documentID = Reflector.getIDField(object);
+            return firestore.collection(object.getClass().getSimpleName()).document(documentID);
+        } catch (IllegalAccessException | NoSuchFieldException | ClassRegistrationException | NotInitializedException e) {
+            throw new FirestormException(e);
+        }
+    }
+
+    /**
+     * Retrieves a CollectionReference to a type.
+     *
+     * @param objectClass The class of object to get a reference for.
+     * @param <T> The Type of class.
+     * @return Returns a CollectionReference.
+     */
+    public static <T> CollectionReference getCollectionReference(final Class<T> objectClass) {
+        return firestore.collection(objectClass.getSimpleName());
+    }
 //
 //    /**
 //     * Utility method. Registers a listener in the registeredListeners map.
