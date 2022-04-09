@@ -533,23 +533,32 @@ public final class Firestorm {
     public static ListenerRegistration getListener(Object object) {
         return registeredListeners.get(object);
     }
-//
-//    /**
-//     * Runs a transaction operation.
-//     *
-//     * @param transaction The transaction to run.
-//     */
-//    public static void runTransaction(final FirestormTransaction transaction) {
-//        ApiFuture<Void> futureTransaction = Firestorm.firestore.runTransaction(transaction);
-//        try {
-//            futureTransaction.get();
-//            transaction.onSuccess();
-//        } catch (InterruptedException | ExecutionException e) {
-//            transaction.onFailure(e);
-//        } catch (NullPointerException e) {
-//            throw new NotInitializedException();
-//        }
-//    }
+
+    /**
+     * Runs a transaction operation.
+     *
+     * @param transaction The transaction to run.
+     */
+    public static <T> Task<T> runTransaction(final FirestormTransaction<T> transaction) {
+        TaskCompletionSource<T> source = new TaskCompletionSource<>();
+        new Handler().post(() -> {
+            Firestorm.firestore.runTransaction(transaction).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    T result = task.getResult();
+                    source.setResult(result);
+                }
+                else {
+                    if (task.getException() != null) {
+                        source.setException(task.getException());
+                    }
+                    else {
+                        source.setException(new FirestormException("Failed to run transaction."));
+                    }
+                }
+            });
+        });
+        return source.getTask();
+    }
 //
 //    /**
 //     * Runs a batch write operation.

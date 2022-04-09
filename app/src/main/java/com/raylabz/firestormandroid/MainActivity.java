@@ -1,6 +1,7 @@
 package com.raylabz.firestormandroid;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.List;
 import java.util.UUID;
@@ -282,6 +285,26 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
+        //Test transactions:
+//        Firestorm.runTransaction(new FirestormTransaction<Void>() {
+//            @Override
+//            public Void execute() {
+//                get(Person.class, "aaa");
+//                create(new Person("bbb", "B!", 233));
+//                return null;
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                System.out.println("Transaction success!");
+//            }
+//        })
+//        .addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                System.err.println("Transaction failed");
+//            }
+//        });
 
 
 
