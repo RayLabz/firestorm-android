@@ -6,12 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
     Button getManyButton;
     Button existsButton;
     Button updateButton;
+    Button createManyButton;
+    Button listButton;
+    Button listAllButton;
+    Button filterButton;
+
+    TextView resultTextview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,30 +41,38 @@ public class MainActivity extends AppCompatActivity {
         getManyButton = findViewById(R.id.buttonGetMany);
         existsButton = findViewById(R.id.buttonExists);
         updateButton = findViewById(R.id.buttonUpdate);
+        createManyButton = findViewById(R.id.buttonCreateMany);
+        listButton = findViewById(R.id.buttonList);
+        listAllButton = findViewById(R.id.buttonListAll);
+        filterButton = findViewById(R.id.buttonFilter);
+
+        resultTextview = findViewById(R.id.resultTextview);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Person p = new Person("aaa", "Nicos", 29);
                 Firestorm.create(p, p.getId());
-                Toast.makeText(MainActivity.this, p.getId(), Toast.LENGTH_SHORT).show();
+                resultTextview.setText(p.getId());
             }
         });
 
         getButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                long time = System.currentTimeMillis();
                 Firestorm.get(Person.class, "aaa")
                         .addOnSuccessListener(new OnSuccessListener<Person>() {
                             @Override
                             public void onSuccess(Person person) {
-                                Toast.makeText(MainActivity.this, person.toString(), Toast.LENGTH_SHORT).show();
+                                resultTextview.setText(person.toString());
+                                System.out.println("Time: " + (System.currentTimeMillis()  - time) + "ms");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(MainActivity.this, "Failed to get object", Toast.LENGTH_SHORT).show();
+                                resultTextview.setText("Failed to get object");
                             }
                         });
             }
@@ -76,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<List<Person>>() {
                             @Override
                             public void onSuccess(List<Person> people) {
-                                Toast.makeText(MainActivity.this, people.toString(), Toast.LENGTH_SHORT).show();
+                                resultTextview.setText(people.toString());
                             }
                         });
             }
@@ -89,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Boolean>() {
                             @Override
                             public void onSuccess(Boolean aBoolean) {
-                                Toast.makeText(MainActivity.this, aBoolean.toString(), Toast.LENGTH_SHORT).show();
+                                resultTextview.setText(aBoolean.toString());
                             }
                         });
             }
@@ -103,13 +119,83 @@ public class MainActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<String>() {
                             @Override
                             public void onSuccess(String s) {
-                                Toast.makeText(MainActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                                resultTextview.setText("updated");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(MainActivity.this, "Failed to update", Toast.LENGTH_SHORT).show();
+                                resultTextview.setText("Failed to update");
+                            }
+                        });
+            }
+        });
+
+        createManyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (int i = 0; i < 5; i++) {
+                    Person p = new Person(UUID.randomUUID().toString().substring(0, 5), "BK-Randy-" + i, i + 10);
+                    Firestorm.create(p);
+                }
+            }
+        });
+
+        listButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Firestorm.list(Person.class, 3)
+                        .addOnSuccessListener(new OnSuccessListener<List<Person>>() {
+                            @Override
+                            public void onSuccess(List<Person> people) {
+                                resultTextview.setText(people.toString());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                resultTextview.setText("Failed to list");
+                            }
+                        });
+            }
+        });
+
+        listAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Firestorm.listAll(Person.class)
+                        .addOnSuccessListener(new OnSuccessListener<List<Person>>() {
+                            @Override
+                            public void onSuccess(List<Person> people) {
+                                resultTextview.setText(people.toString());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                resultTextview.setText("Failed to list all");
+                            }
+                        });
+            }
+        });
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Firestorm.filter(Person.class)
+                        .whereGreaterThan("age", 12)
+                        .fetch()
+                        .addOnSuccessListener(new OnSuccessListener<QueryResult<Person>>() {
+                            @Override
+                            public void onSuccess(QueryResult<Person> personQueryResult) {
+                                List<Person> items = personQueryResult.getItems();
+                                resultTextview.setText(items.toString() + "\nlastID:" + personQueryResult.getLastDocumentID());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                resultTextview.setText("Error filtering");
                             }
                         });
             }

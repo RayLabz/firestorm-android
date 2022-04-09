@@ -54,4 +54,47 @@
         android:text="Update"
         />
 
+    <Button
+        android:id="@+id/buttonCreateMany"
+        android:layout_toRightOf="@id/buttonCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create many"
+        />
+
+    <Button
+        android:id="@+id/buttonList"
+        android:layout_below="@+id/buttonCreateMany"
+        android:layout_toRightOf="@id/buttonGet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List"
+        />
+
+    <Button
+        android:id="@+id/buttonListAll"
+        android:layout_below="@+id/buttonList"
+        android:layout_toRightOf="@id/buttonGet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List all"
+        />
+
+    <Button
+        android:id="@+id/buttonFilter"
+        android:layout_below="@+id/buttonListAll"
+        android:layout_toRightOf="@id/buttonGet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        />
+
+    <TextView
+        android:id="@+id/resultTextview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        />
+
+
 </RelativeLayout>

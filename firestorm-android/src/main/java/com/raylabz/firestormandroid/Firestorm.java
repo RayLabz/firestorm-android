@@ -16,6 +16,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.raylabz.firestormandroid.exception.ClassRegistrationException;
 import com.raylabz.firestormandroid.exception.FirestormException;
 import com.raylabz.firestormandroid.exception.FirestormObjectException;
@@ -232,6 +234,14 @@ public final class Firestorm {
                     List<T> objects = task.getResult().toObjects(objectClass);
                     source.setResult(objects);
                 }
+                else {
+                    if (task.getException() != null) {
+                        source.setException(task.getException());
+                    }
+                    else {
+                        source.setException(new FirestormException("Failed to retrieve items."));
+                    }
+                }
             });
         });
 
@@ -319,124 +329,90 @@ public final class Firestorm {
      * @param objectClass The class of the object to delete.
      * @param objectID    The ID of the object/document in Firestore.
      * @param <T>         The type (class) of the object.
-     * @throws FirestormException Thrown when Firestorm encounters an error.
      */
-    public static <T> Task<Void> delete(final Class<T> objectClass, final String objectID) throws FirestormException {
+    public static <T> Task<Void> delete(final Class<T> objectClass, final String objectID) {
         final DocumentReference reference = firestore.collection(objectClass.getSimpleName()).document(objectID);
         try {
-
             TaskCompletionSource<Void> source = new TaskCompletionSource<>();
             new Handler().post(reference::delete);
             return source.getTask();
-
         } catch (NotInitializedException e) {
             throw new FirestormException(e);
         }
     }
 
-//
-//    /**
-//     * Lists available documents of a given type.
-//     *
-//     * @param objectClass The type of the documents to filter.
-//     * @param limit       The maximum number of objects to return.
-//     * @param <T>         A type matching the type of objectClass.
-//     * @param onFailureListener OnFailureListener to execute onFailure().
-//     * @return Returns an ArrayList of objects of type objectClass.
-//     */
-//    public static <T> ArrayList<T> list(final Class<T> objectClass, final int limit, final OnFailureListener onFailureListener) {
-//        ApiFuture<QuerySnapshot> future = firestore.collection(objectClass.getSimpleName()).limit(limit).get();
-//        try {
-//            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//            ArrayList<T> documentList = new ArrayList<>();
-//            for (final QueryDocumentSnapshot document : documents) {
-//                documentList.add(document.toObject(objectClass));
-//            }
-//            return documentList;
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            onFailureListener.onFailure(e);
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Lists available documents of a given type.
-//     *
-//     * @param objectClass The type of the documents to filter.
-//     * @param limit       The maximum number of objects to return.
-//     * @param <T>         A type matching the type of objectClass.
-//     * @return Returns an ArrayList of objects of type objectClass.
-//     * @throws FirestormException Thrown when Firestorm encounters an error.
-//     */
-//    public static <T> ArrayList<T> list(final Class<T> objectClass, final int limit) throws FirestormException {
-//        ApiFuture<QuerySnapshot> future = firestore.collection(objectClass.getSimpleName()).limit(limit).get();
-//        try {
-//            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//            ArrayList<T> documentList = new ArrayList<>();
-//            for (final QueryDocumentSnapshot document : documents) {
-//                documentList.add(document.toObject(objectClass));
-//            }
-//            return documentList;
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            throw new FirestormException(e);
-//        }
-//    }
-//
-//    /**
-//     * Lists ALL available documents of a given type. May incur charges for read operations for huge numbers of documents.
-//     *
-//     * @param objectClass The type of the documents to filter.
-//     * @param <T>         A type matching the type of objectClass.
-//     * @param onFailureListener OnFailureListener to execute onFailure().
-//     * @return Returns an ArrayList of objects of type objectClass.
-//     */
-//    public static <T> ArrayList<T> listAll(final Class<T> objectClass, final OnFailureListener onFailureListener) {
-//        ApiFuture<QuerySnapshot> future = firestore.collection(objectClass.getSimpleName()).get();
-//        try {
-//            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//            ArrayList<T> documentList = new ArrayList<>();
-//            for (final QueryDocumentSnapshot document : documents) {
-//                documentList.add(document.toObject(objectClass));
-//            }
-//            return documentList;
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            onFailureListener.onFailure(e);
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Lists ALL available documents of a given type. May incur charges for read operations for huge numbers of documents.
-//     *
-//     * @param objectClass The type of the documents to filter.
-//     * @param <T>         A type matching the type of objectClass.
-//     * @return Returns an ArrayList of objects of type objectClass.
-//     * @throws FirestormException Thrown when Firestorm encounters an error.
-//     */
-//    public static <T> ArrayList<T> listAll(final Class<T> objectClass) throws FirestormException {
-//        ApiFuture<QuerySnapshot> future = firestore.collection(objectClass.getSimpleName()).get();
-//        try {
-//            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//            ArrayList<T> documentList = new ArrayList<>();
-//            for (final QueryDocumentSnapshot document : documents) {
-//                documentList.add(document.toObject(objectClass));
-//            }
-//            return documentList;
-//        } catch (InterruptedException | ExecutionException | NotInitializedException e) {
-//            throw new FirestormException(e);
-//        }
-//    }
-//
-//    /**
-//     * Lists a set documents which match the filtering criteria provided. Returns a filter of all documents if no filters are used.
-//     *
-//     * @param objectClass The type of the documents to filter.
-//     * @param <T>         A type matching the type of objectClass.
-//     * @return Returns a FirestormFilterable which can be used to append filter parameters.
-//     */
-//    public static <T> FirestormFilterable<T> filter(final Class<T> objectClass) {
-//        return new FirestormFilterable<>(firestore.collection(objectClass.getSimpleName()), objectClass);
-//    }
+    /**
+     * Lists available documents of a given type.
+     *
+     * @param objectClass The type of the documents to filter.
+     * @param limit       The maximum number of objects to return.
+     * @param <T>         A type matching the type of objectClass.
+     * @return Returns an ArrayList of objects of type objectClass.
+     */
+    public static <T> Task<List<T>> list(final Class<T> objectClass, final int limit) {
+        TaskCompletionSource<List<T>> source = new TaskCompletionSource<>();
+        new Handler().post(() -> {
+            firestore
+                    .collection(objectClass.getSimpleName())
+                    .limit(limit)
+                    .get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    List<T> objects = task.getResult().toObjects(objectClass);
+                    source.setResult(objects);
+                }
+                else {
+                    if (task.getException() != null) {
+                        source.setException(task.getException());
+                    }
+                    else {
+                        source.setException(new FirestormException("Failed to retrieve items."));
+                    }
+                }
+            });
+        });
+        return source.getTask();
+    }
+
+    /**
+     * Lists ALL available documents of a given type. May incur charges for read operations for huge numbers of documents.
+     *
+     * @param objectClass The type of the documents to filter.
+     * @param <T>         A type matching the type of objectClass.
+     * @return Returns an ArrayList of objects of type objectClass.
+     */
+    public static <T> Task<List<T>> listAll(final Class<T> objectClass) {
+        TaskCompletionSource<List<T>> source = new TaskCompletionSource<>();
+        new Handler().post(() -> {
+            firestore
+                    .collection(objectClass.getSimpleName())
+                    .get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    List<T> objects = task.getResult().toObjects(objectClass);
+                    source.setResult(objects);
+                }
+                else {
+                    if (task.getException() != null) {
+                        source.setException(task.getException());
+                    }
+                    else {
+                        source.setException(new FirestormException("Failed to retrieve items."));
+                    }
+                }
+            });
+        });
+        return source.getTask();
+    }
+
+    /**
+     * Lists a set documents which match the filtering criteria provided. Returns a filter of all documents if no filters are used.
+     *
+     * @param objectClass The type of the documents to filter.
+     * @param <T>         A type matching the type of objectClass.
+     * @return Returns a FirestormFilterable which can be used to append filter parameters.
+     */
+    public static <T> FirestormFilterable<T> filter(final Class<T> objectClass) {
+        return new FirestormFilterable<>(firestore.collection(objectClass.getSimpleName()), objectClass);
+    }
 //
 //    /**
 //     * Retrieves a DocumentReference to an object.
