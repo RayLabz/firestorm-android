@@ -286,17 +286,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Test transactions:
-//        Firestorm.runTransaction(new FirestormTransaction<Void>() {
+//        Firestorm.runTransaction(new FirestormTransaction<Integer>() {
 //            @Override
-//            public Void execute() {
+//            public Integer execute() {
 //                get(Person.class, "aaa");
-//                create(new Person("bbb", "B!", 233));
-//                return null;
+//                update(new Person("bbb", "B!", 233));
+//                return 2;
 //            }
-//        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//        }).addOnSuccessListener(new OnSuccessListener<Integer>() {
 //            @Override
-//            public void onSuccess(Void unused) {
-//                System.out.println("Transaction success!");
+//            public void onSuccess(Integer unused) {
+//                System.out.println("Transaction success!" + unused);
 //            }
 //        })
 //        .addOnFailureListener(new OnFailureListener() {

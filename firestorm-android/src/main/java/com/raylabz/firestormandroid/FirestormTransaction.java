@@ -16,7 +16,7 @@ import com.raylabz.firestormandroid.exception.TransactionException;
  * @author Nicos Kasenides
  * @version 1.0.0
  */
-public abstract class FirestormTransaction<T> extends FirestormOperation implements Transaction.Function<T> {
+public abstract class FirestormTransaction<T> extends FirestormOperation<T> implements Transaction.Function<T> {
 
     private Transaction transaction;
 
@@ -122,11 +122,10 @@ public abstract class FirestormTransaction<T> extends FirestormOperation impleme
     public T apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
         this.transaction = transaction;
         try {
-            managedExecute();
+            return managedExecute();
         } catch (FirestormException e) {
             return null;
         }
-        return null;
     }
 
 }

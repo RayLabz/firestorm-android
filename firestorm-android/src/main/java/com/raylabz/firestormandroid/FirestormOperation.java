@@ -13,8 +13,8 @@ public abstract class FirestormOperation<T> {
     /**
      * Managed execution.
      */
-    public final void managedExecute() throws FirestormException {
-        execute();
+    public final T managedExecute() throws FirestormException {
+        return execute();
     }
 
     /**
