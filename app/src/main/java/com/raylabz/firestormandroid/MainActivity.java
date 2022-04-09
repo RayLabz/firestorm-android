@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
@@ -213,39 +214,74 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Test object reference with ID
-        {
-            DocumentReference aaa = Firestorm.getObjectReference(Person.class, "aaa");
-            aaa.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    System.out.println(documentSnapshot.toObject(Person.class));
-                }
-            });
-        }
+//        {
+//            DocumentReference aaa = Firestorm.getObjectReference(Person.class, "aaa");
+//            aaa.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                @Override
+//                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                    System.out.println(documentSnapshot.toObject(Person.class));
+//                }
+//            });
+//        }
 
 
         //Test object reference with POJO:
-        {
-            DocumentReference aaa1 = Firestorm.getObjectReference(p);
-            aaa1.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    System.out.println(documentSnapshot.toObject(Person.class));
-                }
-            });
-        }
+//        {
+//            DocumentReference aaa1 = Firestorm.getObjectReference(p);
+//            aaa1.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                @Override
+//                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                    System.out.println(documentSnapshot.toObject(Person.class));
+//                }
+//            });
+//        }
 
         //Test collection reference:
-        {
-            CollectionReference c1 = Firestorm.getCollectionReference(Person.class);
-            c1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    List<Person> people = queryDocumentSnapshots.toObjects(Person.class);
-                    System.out.println(people);
-                }
-            });
-        }
+//        {
+//            CollectionReference c1 = Firestorm.getCollectionReference(Person.class);
+//            c1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                @Override
+//                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                    List<Person> people = queryDocumentSnapshots.toObjects(Person.class);
+//                    System.out.println(people);
+//                }
+//            });
+//        }
+
+        //Test attach listener to object:
+//        {
+//            Firestorm.attachListener(new OnObjectUpdateListener(p) {
+//                @Override
+//                public void onSuccess() {
+//                    System.out.println("Updated object: " + p);
+//                }
+//
+//                @Override
+//                public void onFailure(String failureMessage) {
+//                    System.err.println(failureMessage);
+//                }
+//            });
+////            Firestorm.detachListener(p);
+//        }
+
+        //Test attach listener to reference:
+//        {
+//            ListenerRegistration listenerRegistration = Firestorm.attachListener(new OnReferenceUpdateListener(Person.class, "aaa") {
+//                @Override
+//                public void onSuccess(Object object) {
+//                    System.out.println("Updated object: " + object);
+//                }
+//
+//                @Override
+//                public void onFailure(String failureMessage) {
+//                    System.err.println(failureMessage);
+//                }
+//            });
+//
+////            Firestorm.detachListener(listenerRegistration);
+//        }
+
+
 
 
 
