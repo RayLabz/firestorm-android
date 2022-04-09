@@ -559,14 +559,14 @@ public final class Firestorm {
         });
         return source.getTask();
     }
-//
-//    /**
-//     * Runs a batch write operation.
-//     *
-//     * @param batch The batch to run.
-//     */
-//    public static void runBatch(final FirestormBatch batch) {
-//        batch.doBatch();
-//    }
-//
+
+    /**
+     * Runs a batch write operation.
+     *
+     * @param batch The batch to run.
+     */
+    public static Task<Void> runBatch(final FirestormBatch batch) {
+        return batch.doBatch();
+    }
+
 }

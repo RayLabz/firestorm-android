@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Person person) {
                                 resultTextview.setText(person.toString());
-                                System.out.println("Time: " + (System.currentTimeMillis()  - time) + "ms");
+                                System.out.println("Time: " + (System.currentTimeMillis() - time) + "ms");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -306,6 +306,27 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
+        //Test batch:
+//        Firestorm.runBatch(new FirestormBatch() {
+//            @Override
+//            public Void execute() {
+//                for (int i = 0; i < 10; i++) {
+//                    Person c = new Person(i + "-id", "name-" + i, i + 20);
+//                    create(c);
+//                }
+//                return null;
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                System.out.println("Batch write success!");
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                System.err.println(e.getMessage());
+//            }
+//        });
 
 
     }
