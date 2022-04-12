@@ -89,6 +89,15 @@
         android:text="Filter"
         />
 
+    <Button
+        android:id="@+id/buttonPaginator"
+        android:layout_below="@+id/buttonFilter"
+        android:layout_toRightOf="@id/buttonGet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Paginate"
+        />
+
     <TextView
         android:id="@+id/resultTextview"
         android:layout_width="match_parent"

@@ -35,8 +35,11 @@ public class MainActivity extends AppCompatActivity {
     Button listButton;
     Button listAllButton;
     Button filterButton;
+    Button paginatorButton;
 
     TextView resultTextview;
+
+    private String lastDocumentID = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         listButton = findViewById(R.id.buttonList);
         listAllButton = findViewById(R.id.buttonListAll);
         filterButton = findViewById(R.id.buttonFilter);
+        paginatorButton = findViewById(R.id.buttonPaginator);
 
         resultTextview = findViewById(R.id.resultTextview);
 
@@ -206,6 +210,29 @@ public class MainActivity extends AppCompatActivity {
                                 resultTextview.setText("Error filtering");
                             }
                         });
+            }
+        });
+
+        paginatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Pagination:
+                Paginator<Person> next = Paginator.next(Person.class, lastDocumentID, 5);
+                next.fetch().addOnSuccessListener(new OnSuccessListener<QueryResult<Person>>() {
+                    @Override
+                    public void onSuccess(QueryResult<Person> personQueryResult) {
+                        String lastDocumentID = personQueryResult.getLastDocumentID();
+                        System.out.println("lastDocumentID = " + lastDocumentID);
+                        System.out.println("items = " + personQueryResult.getItems());
+                        resultTextview.setText(personQueryResult.getItems().toString());
+                        MainActivity.this.lastDocumentID = lastDocumentID;
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.err.println(e.getMessage());
+                    }
+                });
             }
         });
 
