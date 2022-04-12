@@ -143,7 +143,27 @@
                 You can download Firestorm for Android as an .aar file:
             </p>
 
-            <a class="btn btn-flat orange darken-3 white-text" href="">Download AAR</a>
+            <a class="btn btn-flat orange darken-3 white-text" href="downloads/firestorm-android-0.1.0.aar">Download AAR</a>
+
+            <p class="justify">
+                Import the library by going to your app's gradle configuration file, and adding the following inside your project
+                dependencies:
+            </p>
+
+<pre class="prettyprint java">dependencies {
+    ...
+    implementation platform('com.google.firebase:firebase-bom:29.3.0')
+    implementation 'com.google.firebase:firebase-firestore:24.1.0'
+    implementation fileTree(dir: '<b>Path\\To\\Library</b>', include: ['*.aar', '*.jar'], exclude: [])
+    ...
+}</pre>
+
+            <p>
+                Make sure to edit the path to point to the folder where you have stored the library. Ideally, this should be
+            within your Android studio project.
+            </p>
+
+            <p>Better, and more automated methods of import will be available on full release.</p>
 
             <h3 id="guide">Guide</h3>
 
