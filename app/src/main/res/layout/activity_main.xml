@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".android.MainActivity">
 
     <Button
         android:id="@+id/buttonCreate"
@@ -56,11 +56,10 @@
 
     <Button
         android:id="@+id/buttonCreateMany"
-        android:layout_toRightOf="@id/buttonCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create many"
-        />
+        android:layout_toRightOf="@id/buttonCreate"
+        android:text="Create many" />
 
     <Button
         android:id="@+id/buttonList"
@@ -73,26 +72,24 @@
 
     <Button
         android:id="@+id/buttonListAll"
-        android:layout_below="@+id/buttonList"
-        android:layout_toRightOf="@id/buttonGet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="List all"
-        />
+        android:layout_below="@+id/buttonList"
+        android:layout_toRightOf="@id/buttonDelete"
+        android:text="List all" />
 
     <Button
         android:id="@+id/buttonFilter"
-        android:layout_below="@+id/buttonListAll"
-        android:layout_toRightOf="@id/buttonGet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filter"
-        />
+        android:layout_below="@+id/buttonListAll"
+        android:layout_toRightOf="@id/buttonGetMany"
+        android:text="Filter" />
 
     <Button
         android:id="@+id/buttonPaginator"
         android:layout_below="@+id/buttonFilter"
-        android:layout_toRightOf="@id/buttonGet"
+        android:layout_toRightOf="@id/buttonExists"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Paginate"
